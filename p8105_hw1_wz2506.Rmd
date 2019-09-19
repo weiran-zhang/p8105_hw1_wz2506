@@ -5,3 +5,82 @@ date: "9/15/2019"
 output: github_document
 ---
 
+##Problem 1
+
+```{r}
+library(tidyverse)
+
+hw1_df = tibble(
+  vec_numeric = rnorm(8),
+  vec_char = c("My", "Name", "Is", "Weiran", "Zhang", "I", "Like", "DataScience"),
+  vec_logical = vec_numeric > 0,
+  vec_factor = factor(c("red", "green", "blue", "red", "blue", "blue", "green", "green"))
+)
+
+mean(pull(hw1_df, vec_numeric))
+mean(pull(hw1_df, vec_char))
+mean(pull(hw1_df, vec_logical))
+mean(pull(hw1_df, vec_factor))
+
+```
+
+##The mean of numeric vector is a number, the mean of logical vector is a number. The mean for the character vector and factor vector does not work since they are neither numerical value nor logical value.
+
+```{r eval = FALSE}
+
+as.numeric(pull(hw1_df, vec_char))
+as.numeric(pull(hw1_df, vec_logical))
+as.numeric(pull(hw1_df, vec_factor))
+
+```
+
+##The logical vector and the factor vector can be converted to numerical forms. But the character vectot still cannot be changed to numerical form. This results kind of help to explain the results when taking the mean of those three vectors. Since the character vector are composed of all different characters, so the character vector cannot be converted to numeric form.  
+
+```{r}
+as.numeric(pull(hw1_df, vec_logical)) * pull(hw1_df, vec_numeric)
+as.factor(pull(hw1_df, vec_logical)) * pull(hw1_df, vec_numeric)
+as.numeric(as.factor(pull(hw1_df, vec_logical))) * pull(hw1_df, vec_numeric)
+
+```
+
+##Problem 2
+```{r}
+library(tidyverse)
+hw1_df2 = tibble(
+  x = rnorm(500),
+  y = rnorm(500),
+  vec_logical2 = x + y > 1,
+  a = as.numeric(vec_logical2),
+  b = as.factor(vec_logical2)
+)
+
+
+```
+
+`nrow <- nrow(hw1_df2); ncol <- ncol(hw1_df2); mean <- mean(hw1_df2$x); median <- median(hw1_df2$x); sd <- sd(hw1_df2$x); proportion <- length(hw1_df2$a[hw1_df2$a == 1]) / 500`
+
+##Plots
+
+```{r}
+
+ggplot(hw1_df2, aes(x = x, y = y, color = vec_logical2)) + geom_point()
+
+
+ggplot(hw1_df2, aes(x = x, y = y, color = a)) + geom_point()
+
+
+ggplot(hw1_df2, aes(x = x, y = y, color = b)) + geom_point()
+
+
+```
+
+##Comment: In the plots of logical vector and factor vector, the blue represents TRUE cases and red represents FALSE cases. In the plot of numeric vector, The color from black to light blue represent number ranges from 0 to 1. And 0 represents FALSE cases and 1 represents TRUE cases. So according to those three plots, we can see there are more FALSE cases than TRUE cases for "x + y > 1" in this data frame. 
+
+##
+```{r}
+ggplot(hw1_df2, aes(x = x, y = y, color = vec_logical2)) + geom_point()
+
+ggsave("hw1_scatterplot.pdf", height = 4, width = 6)
+```
+
+
